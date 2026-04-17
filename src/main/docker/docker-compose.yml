@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:18-alpine3.22
+    container_name: foodstorage-postgres
+    environment:
+      POSTGRES_DB: fooddb
+      POSTGRES_USER: food_user
+      POSTGRES_PASSWORD: pw
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

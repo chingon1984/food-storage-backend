@@ -3,19 +3,21 @@ server:
 spring:
   application:
     name: foodstorage
+
   devtools:
     livereload:
       enabled: true
+
   datasource:
-    url: jdbc:h2:mem:fooddb
-    username: root
-    password: root
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      path: /h2-console
-      enabled: true
+    url: jdbc:postgresql://localhost:5432/fooddb
+    username: food_user
+    password: pw
+    driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
+
+  flyway:
+    enabled: true
