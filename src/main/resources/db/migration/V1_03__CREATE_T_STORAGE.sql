@@ -6,8 +6,11 @@ CREATE TABLE T_STORAGE(
     USER_ID BIGINT not null,
     DESCRIPTION TEXT,
     ARCHIVED boolean not null default false,
-    CREATED_AT TIMESTAMP not null default CURRENT_TIMESTAMP,
-    UPDATED_AT TIMESTAMP not null default CURRENT_TIMESTAMP,
+
+    CREATED_AT timestamp not null DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT timestamp not null DEFAULT CURRENT_TIMESTAMP,
+    CREATED_BY varchar(100),
+    UPDATED_BY varchar(100),
 
     CONSTRAINT STORAGE_PK PRIMARY KEY (ID),
 

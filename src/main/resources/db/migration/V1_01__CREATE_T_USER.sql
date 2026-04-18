@@ -7,8 +7,11 @@ CREATE TABLE T_USER (
   PASSWORD_HASH varchar(255) not null,
   SEC_ROLE varchar(255) not null default 'USER' CHECK (SEC_ROLE IN ('USER', 'ADMIN')),
   VERIFIED  boolean not null default false,
+
   CREATED_AT timestamp not null DEFAULT CURRENT_TIMESTAMP,
   UPDATED_AT timestamp not null DEFAULT CURRENT_TIMESTAMP,
+  CREATED_BY varchar(100),
+  UPDATED_BY varchar(100),
 
   CONSTRAINT USER_PK PRIMARY KEY (ID)
 );

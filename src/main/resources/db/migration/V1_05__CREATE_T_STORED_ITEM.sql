@@ -7,8 +7,11 @@ CREATE TABLE T_STORED_ITEM(
     ARCHIVED boolean not null default false,
     EXPIRY_DATE DATE not null default CURRENT_DATE,
     QUANTITY_VALUE INTEGER not null default 1,
-    CREATED_AT TIMESTAMP not null default CURRENT_TIMESTAMP,
-    UPDATED_AT TIMESTAMP not null default CURRENT_TIMESTAMP,
+
+    CREATED_AT timestamp not null DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT timestamp not null DEFAULT CURRENT_TIMESTAMP,
+    CREATED_BY varchar(100),
+    UPDATED_BY varchar(100),
 
     CONSTRAINT STORED_ITEM_PK PRIMARY KEY (ID),
 
