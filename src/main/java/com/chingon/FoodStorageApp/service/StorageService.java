@@ -3,7 +3,7 @@ package com.chingon.FoodStorageApp.service;
 import com.chingon.FoodStorageApp.dto.StorageResponse;
 import com.chingon.FoodStorageApp.entity.Storage;
 import com.chingon.FoodStorageApp.entity.User;
-import com.chingon.FoodStorageApp.exeptions.StorageNotFoundException;
+import com.chingon.FoodStorageApp.exception.StorageNotFoundException;
 import com.chingon.FoodStorageApp.mapper.StorageMapper;
 import com.chingon.FoodStorageApp.repository.IStorageRepository;
 import lombok.RequiredArgsConstructor;
