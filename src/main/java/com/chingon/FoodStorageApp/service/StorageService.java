@@ -3,7 +3,7 @@ package com.chingon.FoodStorageApp.service;
 import com.chingon.FoodStorageApp.dto.StorageResponse;
 import com.chingon.FoodStorageApp.entity.Storage;
 import com.chingon.FoodStorageApp.entity.User;
-import com.chingon.FoodStorageApp.exception.StorageNotFoundException;
+import com.chingon.FoodStorageApp.exception.RessourceNotFoundException;
 import com.chingon.FoodStorageApp.mapper.StorageMapper;
 import com.chingon.FoodStorageApp.repository.IStorageRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class StorageService implements IStorageService {
     @Override
     public StorageResponse getStorageById(Long storageId, Long userId) {
         Storage storage = storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
-                .orElseThrow(() -> new StorageNotFoundException(storageId));
+                .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
         return storageMapper.toResponse(storage);
     }
 
@@ -55,7 +55,7 @@ public class StorageService implements IStorageService {
     @Transactional
     public StorageResponse updateStorage(Long storageId, Long userId, String name, String description) {
         Storage storage = storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
-                .orElseThrow(() -> new StorageNotFoundException(storageId));
+                .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
 
         storage.setName(name);
         storage.setDescription(description);
@@ -68,7 +68,7 @@ public class StorageService implements IStorageService {
     @Transactional
     public void deleteStorage(Long storageId, Long userId) {
         Storage storage = storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
-                .orElseThrow(() -> new StorageNotFoundException(storageId));
+                .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
 
         storage.setArchived(true);
         storageRepository.save(storage);
