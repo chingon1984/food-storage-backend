@@ -6,18 +6,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalExceptionMapper extends ResponseEntityExceptionHandler {
@@ -25,17 +23,18 @@ public class GlobalExceptionMapper extends ResponseEntityExceptionHandler {
 
     @Override
     protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        Map<String, String> validationErrors = new HashMap<>();
-        List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
+        List<String> allErrors = ex.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(objectError -> objectError.getDefaultMessage())
+                .toList();
 
-        allErrors.forEach(error -> {
-            String field = ((FieldError) error).getField();
-            String message = error.getDefaultMessage();
-            validationErrors.put(field, message);
-        });
+        String errorMessage = String.join(" ; ", allErrors);
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(request.getDescription(false), errorMessage, LocalDateTime.now());
 
-        return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
     }
+
 
     @ExceptionHandler(RessourceNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleRessourceNotFoundException(RessourceNotFoundException exception, WebRequest webRequest) {
@@ -43,6 +42,27 @@ public class GlobalExceptionMapper extends ResponseEntityExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(errorResponseDto);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponseDto> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception, WebRequest webRequest) {
+        var errorResponseDto = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                String.format("%s is not of valid type <%s>", exception.getValue(), Objects.requireNonNull(exception.getRequiredType()).getSimpleName()),
+                LocalDateTime.now());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponseDto);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception exception, WebRequest webRequest) {
+        var errorResponseDto = new ErrorResponseDto(webRequest.getDescription(false), exception.getMessage(), LocalDateTime.now());
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(errorResponseDto);
     }
 }

@@ -19,7 +19,7 @@ public record StorageResponse(
         )
         String description,
         @Schema(
-                description = "is the storage still in use?", example = "true"
+                description = "is the storage still in use?", example = "false"
         )
         Boolean archived
 ) {
