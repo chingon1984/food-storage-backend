@@ -11,7 +11,7 @@ public record StorageResponse(
         )
         Long id,
         @Schema(
-                description = "name of the storage", example = "storageHouse"
+                description = "name of the storage", example = "storage House"
         )
         String name,
         @Schema(
@@ -19,7 +19,7 @@ public record StorageResponse(
         )
         String description,
         @Schema(
-                description = "is the storage still in use?", example = "false"
+                description = "has the storage been removed?", example = "false"
         )
         Boolean archived
 ) {
