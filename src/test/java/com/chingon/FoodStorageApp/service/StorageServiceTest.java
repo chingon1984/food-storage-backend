@@ -1,10 +1,7 @@
 package com.chingon.FoodStorageApp.service;
 
-import com.chingon.FoodStorageApp.dto.StorageResponse;
-import com.chingon.FoodStorageApp.entity.Storage;
-import com.chingon.FoodStorageApp.entity.User;
-import com.chingon.FoodStorageApp.mapper.StorageMapper;
-import com.chingon.FoodStorageApp.repository.IStorageRepository;
+import com.chingon.FoodStorageApp.inventory.storage.*;
+import com.chingon.FoodStorageApp.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,7 +90,7 @@ class StorageServiceTest {
     }
 
     @Test
-    void getStorageById_shouldReturnStorage() {
+    void getStorageById_shouldReturnStorageResponse() {
         // Arrange
         StorageResponse expectedResponse = new StorageResponse(1L, "Test Storage", "A test storage", false);
 
@@ -102,7 +99,7 @@ class StorageServiceTest {
         when(storageMapper.toResponse(testStorage)).thenReturn(expectedResponse);
 
         // Act
-        StorageResponse storage = storageService.getStorageById(testStorage.getId(), testUser.getId());
+        StorageResponse storage = storageService.getStorageResponseById(testStorage.getId(), testUser.getId());
 
         // Assert
         assertNotNull(storage);
@@ -116,7 +113,7 @@ class StorageServiceTest {
     }
 
     @Test
-    void getStorageById_shouldThrowExceptionForNonExistentStorage() {
+    void getStorageById_shouldThrowExceptionForNonExistentStorageResponse() {
         // Arrange
         final long id = 999L;
         when(storageRepository.findByIdAndUserIdAndArchivedFalse(999L, testUser.getId()))
@@ -124,14 +121,14 @@ class StorageServiceTest {
 
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> storageService.getStorageById(id, testUser.getId()));
+                () -> storageService.getStorageResponseById(id, testUser.getId()));
         assertEquals("Storage with ID " + id + " not found.", exception.getMessage());
 
         verify(storageRepository, times(1)).findByIdAndUserIdAndArchivedFalse(999L, testUser.getId());
     }
 
     @Test
-    void getStorageById_shouldThrowExceptionForWrongUser() {
+    void getStorageResponseById_shouldThrowExceptionForWrongUser() {
         // Arrange
         final long id = 999L;
         when(storageRepository.findByIdAndUserIdAndArchivedFalse(testStorage.getId(), id))
@@ -139,7 +136,7 @@ class StorageServiceTest {
 
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> storageService.getStorageById(testStorage.getId(), id));
+                () -> storageService.getStorageResponseById(testStorage.getId(), id));
         assertEquals("Storage with ID " + testStorage.getId() + " not found.", exception.getMessage());
 
         verify(storageRepository, times(1)).findByIdAndUserIdAndArchivedFalse(testStorage.getId(), 999L);

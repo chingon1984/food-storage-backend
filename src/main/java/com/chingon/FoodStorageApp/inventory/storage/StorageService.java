@@ -1,0 +1,75 @@
+package com.chingon.FoodStorageApp.inventory.storage;
+
+import com.chingon.FoodStorageApp.user.User;
+import com.chingon.FoodStorageApp.shared.exception.RessourceNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class StorageService implements IStorageService {
+
+    private final IStorageRepository storageRepository;
+
+    @Override
+    public List<StorageResponse> getAllStoragesForUser(Long userId) {
+        return storageRepository.findByUserIdAndArchivedFalse(userId)
+                .stream()
+                .map(StorageMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public StorageResponse getStorageResponseById(Long storageId, Long userId) {
+        Storage storage = storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
+                .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
+        return StorageMapper.toResponse(storage);
+    }
+
+    @Override
+    public Storage getStorageById(Long storageId, Long userId) {
+        return storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
+                .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
+    }
+
+    @Override
+    @Transactional
+    public StorageResponse createStorage(Long userId, String name, String description) {
+        User user = new User();
+        user.setId(userId);
+
+        Storage storage = new Storage();
+        storage.setName(name);
+        storage.setDescription(description);
+        storage.setUser(user);
+        storage.setArchived(false);
+
+        Storage savedStorage = storageRepository.save(storage);
+        return StorageMapper.toResponse(savedStorage);
+    }
+
+    @Override
+    @Transactional
+    public StorageResponse updateStorage(Long storageId, Long userId, String name, String description) {
+        Storage storage = storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
+                .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
+
+        storage.setName(name);
+        storage.setDescription(description);
+
+        return StorageMapper.toResponse(storage);
+    }
+
+    @Override
+    @Transactional
+    public void deleteStorage(Long storageId, Long userId) {
+        Storage storage = storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
+                .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
+
+        storage.setArchived(true);
+    }
+}
