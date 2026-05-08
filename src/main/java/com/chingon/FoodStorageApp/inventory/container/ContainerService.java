@@ -34,6 +34,15 @@ public class ContainerService implements IContainerService{
     }
 
     @Override
+    public ContainerResponse getContainer(Long storageId, Long containerId, Long userId) {
+        Container requestedContainer = containerRepository.findActiveContainerById(containerId, storageId, userId)
+                .orElseThrow(() -> new RessourceNotFoundException("Container", "ID", containerId.toString()));
+
+        return ContainerMapper.toResponse(requestedContainer);
+    }
+
+
+    @Override
     public ContainerResponse createContainer(Long storageId, Long userId, String name, String description) {
         Storage storageToStoreContainerTo = getStorage(storageId, userId);
 

@@ -2,7 +2,7 @@ package com.chingon.FoodStorageApp.inventory.storage;
 
 import com.chingon.FoodStorageApp.shared.api.ErrorResponseDto;
 import com.chingon.FoodStorageApp.shared.api.ResponseDto;
-import com.chingon.FoodStorageApp.shared.constants.FoodStorageConstants;
+import com.chingon.FoodStorageApp.shared.constants.Routes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,7 +27,7 @@ import java.util.List;
 )
 @RestController
 @Validated
-@RequestMapping(path = FoodStorageConstants.API_PATH + FoodStorageConstants.STORAGES_PATH, produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = Routes.API + Routes.Storage.BASE, produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class StorageController {
 
@@ -97,7 +97,7 @@ public class StorageController {
             )
     }
     )
-    @GetMapping("/{storageId}")
+    @GetMapping(Routes.Storage.BY_ID)
     public ResponseEntity<StorageResponse> getStorageWithId(@PathVariable @Positive @Parameter(description = "ID of the storage to fetch", example = "1", required = true) Long storageId) {
         StorageResponse storageResponse = storageService.getStorageResponseById(storageId, 1L);
 
@@ -171,7 +171,7 @@ public class StorageController {
             )
     }
     )
-    @PutMapping("/{storageId}")
+    @PutMapping(Routes.Storage.BY_ID)
     public ResponseEntity<StorageResponse> updateStorage( @PathVariable @Positive  @Parameter(description = "ID of the storage to update", required = true) Long storageId, @Valid @RequestBody StorageRequest storageRequest) {
         StorageResponse updatedStorageResponse = storageService.updateStorage(storageId, 1L, storageRequest.name(), storageRequest.description());
 
@@ -207,7 +207,7 @@ public class StorageController {
             )
     }
     )
-    @DeleteMapping("/{storageId}")
+    @DeleteMapping(Routes.Storage.BY_ID)
     public ResponseEntity<ResponseDto> deleteStorage(@Valid @Positive @PathVariable @Parameter(description = "ID of the storage to delete", required = true) Long storageId) {
         storageService.deleteStorage(storageId, 1L);
 
