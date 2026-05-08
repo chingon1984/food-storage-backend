@@ -2,6 +2,7 @@ package com.chingon.FoodStorageApp.inventory.storage;
 
 import com.chingon.FoodStorageApp.shared.api.ErrorResponseDto;
 import com.chingon.FoodStorageApp.shared.api.ResponseDto;
+import com.chingon.FoodStorageApp.shared.constants.FoodStorageConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +27,7 @@ import java.util.List;
 )
 @RestController
 @Validated
-@RequestMapping(path = "/api/v1/storages", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = FoodStorageConstants.API_PATH + FoodStorageConstants.STORAGES_PATH, produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class StorageController {
 
@@ -60,7 +61,7 @@ public class StorageController {
             )
     }
     )
-    @GetMapping("/fetch")
+    @GetMapping()
     public ResponseEntity<List<StorageResponse>> getAllStorages() {
         List<StorageResponse> storageResponses = storageService.getAllStoragesForUser(1L);
 
@@ -96,7 +97,7 @@ public class StorageController {
             )
     }
     )
-    @GetMapping("/fetch/{storageId}")
+    @GetMapping("/{storageId}")
     public ResponseEntity<StorageResponse> getStorageWithId(@PathVariable @Positive @Parameter(description = "ID of the storage to fetch", example = "1", required = true) Long storageId) {
         StorageResponse storageResponse = storageService.getStorageResponseById(storageId, 1L);
 
@@ -128,7 +129,7 @@ public class StorageController {
             )
     }
     )
-    @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<StorageResponse> createStorage(
             @RequestBody
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Storage Request Dto", required = true)
@@ -170,7 +171,7 @@ public class StorageController {
             )
     }
     )
-    @PutMapping("/update/{storageId}")
+    @PutMapping("/{storageId}")
     public ResponseEntity<StorageResponse> updateStorage( @PathVariable @Positive  @Parameter(description = "ID of the storage to update", required = true) Long storageId, @Valid @RequestBody StorageRequest storageRequest) {
         StorageResponse updatedStorageResponse = storageService.updateStorage(storageId, 1L, storageRequest.name(), storageRequest.description());
 
@@ -206,7 +207,7 @@ public class StorageController {
             )
     }
     )
-    @DeleteMapping("/delete/{storageId}")
+    @DeleteMapping("/{storageId}")
     public ResponseEntity<ResponseDto> deleteStorage(@Valid @Positive @PathVariable @Parameter(description = "ID of the storage to delete", required = true) Long storageId) {
         storageService.deleteStorage(storageId, 1L);
 
