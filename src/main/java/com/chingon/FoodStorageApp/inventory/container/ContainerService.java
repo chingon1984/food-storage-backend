@@ -34,8 +34,8 @@ public class ContainerService implements IContainerService{
     }
 
     @Override
-    public ContainerResponse getContainer(Long storageId, Long containerId, Long userId) {
-        Container requestedContainer = containerRepository.findActiveContainerById(containerId, storageId, userId)
+    public ContainerResponse getContainer(Long containerId, Long userId) {
+        Container requestedContainer = containerRepository.findActiveContainerById(containerId,  userId)
                 .orElseThrow(() -> new RessourceNotFoundException("Container", "ID", containerId.toString()));
 
         return ContainerMapper.toResponse(requestedContainer);
@@ -59,8 +59,8 @@ public class ContainerService implements IContainerService{
 
     @Transactional
     @Override
-    public ContainerResponse updateContainer(Long containerId, Long storageId, Long userId, String name, String description) {
-        Container containerToUpdate = containerRepository.findActiveContainerById(containerId, storageId, userId)
+    public ContainerResponse updateContainer(Long containerId, Long userId, String name, String description) {
+        Container containerToUpdate = containerRepository.findActiveContainerById(containerId, userId)
                 .orElseThrow(() -> new RessourceNotFoundException("Container", "ID", containerId.toString()));
 
         containerToUpdate.setName(name);
@@ -71,9 +71,9 @@ public class ContainerService implements IContainerService{
 
     @Transactional
     @Override
-    public ContainerResponse updateLocation(Long containerId, Long oldStorageId, Long newStorageId, Long userId) {
+    public ContainerResponse updateLocation(Long containerId, Long newStorageId, Long userId) {
         Storage newStorage = storageService.getStorageById(newStorageId, userId);
-        Container containerToUpdate = containerRepository.findActiveContainerById(containerId, oldStorageId, userId)
+        Container containerToUpdate = containerRepository.findActiveContainerById(containerId, userId)
                 .orElseThrow(() -> new RessourceNotFoundException("Container", "ID", containerId.toString()));
 
         containerToUpdate.setStorage(newStorage);
@@ -82,8 +82,8 @@ public class ContainerService implements IContainerService{
 
     @Transactional
     @Override
-    public void deleteContainer(Long containerId, Long storageId, Long userId) {
-        Container containerToDelete = containerRepository.findActiveContainerById(containerId, storageId, userId)
+    public void deleteContainer(Long containerId, Long userId) {
+        Container containerToDelete = containerRepository.findActiveContainerById(containerId, userId)
                 .orElseThrow(() -> new RessourceNotFoundException("Container", "ID", containerId.toString()));
 
         containerToDelete.setArchived(true);
