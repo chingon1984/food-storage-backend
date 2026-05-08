@@ -13,5 +13,6 @@ public final class Routes {
     public static final class Container{
         public static final String BASE = "/containers";
         public static final String BY_ID = BASE + "/{containerId}";
+        public static final String MOVE = "/move/{newStorageId}";
     }
 }

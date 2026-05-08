@@ -1,5 +1,7 @@
 package com.chingon.FoodStorageApp.inventory.storage;
 
+import com.chingon.FoodStorageApp.shared.annotation.ContainerRequestBody;
+import com.chingon.FoodStorageApp.shared.annotation.StorageIdParameter;
 import com.chingon.FoodStorageApp.shared.api.ErrorResponseDto;
 import com.chingon.FoodStorageApp.shared.api.ResponseDto;
 import com.chingon.FoodStorageApp.shared.constants.Routes;
@@ -98,7 +100,8 @@ public class StorageController {
     }
     )
     @GetMapping(Routes.Storage.BY_ID)
-    public ResponseEntity<StorageResponse> getStorageWithId(@PathVariable @Positive @Parameter(description = "ID of the storage to fetch", example = "1", required = true) Long storageId) {
+    public ResponseEntity<StorageResponse> getStorageWithId(
+            @PathVariable @Positive @StorageIdParameter Long storageId) {
         StorageResponse storageResponse = storageService.getStorageResponseById(storageId, 1L);
 
         return ResponseEntity.ok(storageResponse);
@@ -132,7 +135,7 @@ public class StorageController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<StorageResponse> createStorage(
             @RequestBody
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Storage Request Dto", required = true)
+            @ContainerRequestBody
             @Valid StorageRequest request) {
         StorageResponse storageResponse = storageService.createStorage(1L, request.name(), request.description());
 
@@ -172,7 +175,7 @@ public class StorageController {
     }
     )
     @PutMapping(Routes.Storage.BY_ID)
-    public ResponseEntity<StorageResponse> updateStorage( @PathVariable @Positive  @Parameter(description = "ID of the storage to update", required = true) Long storageId, @Valid @RequestBody StorageRequest storageRequest) {
+    public ResponseEntity<StorageResponse> updateStorage( @PathVariable @Positive  @StorageIdParameter Long storageId, @Valid @RequestBody StorageRequest storageRequest) {
         StorageResponse updatedStorageResponse = storageService.updateStorage(storageId, 1L, storageRequest.name(), storageRequest.description());
 
         return ResponseEntity.ok(updatedStorageResponse);
@@ -208,7 +211,7 @@ public class StorageController {
     }
     )
     @DeleteMapping(Routes.Storage.BY_ID)
-    public ResponseEntity<ResponseDto> deleteStorage(@Valid @Positive @PathVariable @Parameter(description = "ID of the storage to delete", required = true) Long storageId) {
+    public ResponseEntity<ResponseDto> deleteStorage(@Valid @Positive @StorageIdParameter Long storageId) {
         storageService.deleteStorage(storageId, 1L);
 
         return ResponseEntity.ok(new ResponseDto("Storage with ID: " + storageId + " was deleted!"));

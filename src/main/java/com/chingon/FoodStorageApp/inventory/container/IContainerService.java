@@ -8,5 +8,7 @@ public interface IContainerService {
     ContainerResponse getContainer(Long storageId, Long containerId, Long userId);
     ContainerResponse createContainer(Long storageId, Long userId, String name, String description);
     ContainerResponse updateContainer(Long containerId, Long storageId, Long userId, String name, String description);
+    ContainerResponse updateLocation(Long containerId, Long oldStorageId, Long newStorageId, Long userId);
     void deleteContainer(Long containerId, Long storageId, Long userId);
+
 }

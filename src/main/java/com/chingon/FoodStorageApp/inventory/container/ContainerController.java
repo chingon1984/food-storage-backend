@@ -25,7 +25,7 @@ public class ContainerController {
     private final IContainerService containerService;
 
     @GetMapping(Routes.Container.BASE)
-    public ResponseEntity<List<ContainerResponse>> fetchAllContainers(
+    public ResponseEntity<List<ContainerResponse>> fetchAllContainersOfStorage(
             @PathVariable @Positive @StorageIdParameter Long storageId) {
         List<ContainerResponse> containers = containerService.getAllContainersForStorage(storageId, 1L);
 
@@ -64,6 +64,17 @@ public class ContainerController {
         ContainerResponse updatedContainer = containerService.updateContainer(containerId, storageId, 1L,containerRequest.name(), containerRequest.description());
 
         return ResponseEntity.ok(updatedContainer);
+    }
+
+    @PutMapping(Routes.Container.BY_ID + Routes.Container.MOVE)
+    public ResponseEntity<ContainerResponse> updateLocation(
+            @PathVariable @Positive @StorageIdParameter Long storageId,
+            @PathVariable @Positive @ContainerIdParameter Long containerId,
+            @PathVariable @Positive @Parameter(description = "new ID of storage" , required = true) Long newStorageId
+    ) {
+        ContainerResponse movedContainer = containerService.updateLocation(containerId, storageId, newStorageId, 1L);
+
+        return ResponseEntity.ok(movedContainer);
     }
 
     @DeleteMapping(Routes.Container.BY_ID)
