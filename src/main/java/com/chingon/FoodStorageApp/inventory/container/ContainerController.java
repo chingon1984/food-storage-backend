@@ -27,7 +27,7 @@ public class ContainerController {
     @GetMapping(Routes.Storage.BY_ID + Routes.Container.BASE)
     public ResponseEntity<List<ContainerResponse>> fetchContainersOfStorage(
             @PathVariable @Positive @StorageIdParameter Long storageId) {
-        List<ContainerResponse> containers = containerService.getAllContainersForStorage(storageId, 1L);
+        List<ContainerResponse> containers = containerService.getAllContainersForStorage(storageId);
 
         return ResponseEntity.ok(containers);
     }
@@ -36,7 +36,7 @@ public class ContainerController {
     public ResponseEntity<ContainerResponse> fetchContainer(
             @PathVariable @Positive @ContainerIdParameter Long containerId
     ) {
-        ContainerResponse requstedContainer = containerService.getContainer(containerId, 1L);
+        ContainerResponse requstedContainer = containerService.getContainer(containerId);
 
         return ResponseEntity.ok(requstedContainer);
     }
@@ -46,7 +46,7 @@ public class ContainerController {
             @PathVariable @Positive @StorageIdParameter Long storageId,
             @RequestBody @Valid @ContainerRequestBody ContainerRequest request
     ) {
-        ContainerResponse containerCreated = containerService.createContainer(storageId, 1L, request.name(), request.description());
+        ContainerResponse containerCreated = containerService.createContainer(storageId, request.name(), request.description());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -59,7 +59,7 @@ public class ContainerController {
             @PathVariable @Positive @ContainerIdParameter Long containerId,
             @RequestBody @Valid @ContainerRequestBody ContainerRequest containerRequest
     ) {
-        ContainerResponse updatedContainer = containerService.updateContainer(containerId, 1L, containerRequest.name(), containerRequest.description());
+        ContainerResponse updatedContainer = containerService.updateContainer(containerId, containerRequest.name(), containerRequest.description());
 
         return ResponseEntity.ok(updatedContainer);
     }
@@ -69,7 +69,7 @@ public class ContainerController {
             @PathVariable @Positive @ContainerIdParameter Long containerId,
             @PathVariable @Positive @Parameter(description = "new ID of storage" , required = true) Long targetStorageId
     ) {
-        ContainerResponse movedContainer = containerService.updateLocation(containerId,  targetStorageId, 1L);
+        ContainerResponse movedContainer = containerService.updateLocation(containerId,  targetStorageId);
 
         return ResponseEntity.ok(movedContainer);
     }
@@ -78,7 +78,7 @@ public class ContainerController {
     public ResponseEntity<ResponseDto> deleteContainer(
           @PathVariable @Positive @ContainerIdParameter Long containerId
     ) {
-        containerService.deleteContainer(containerId, 1L);
+        containerService.deleteContainer(containerId);
 
         return ResponseEntity.ok(new ResponseDto("Container with ID: " + containerId + " was deleted"));
     }
