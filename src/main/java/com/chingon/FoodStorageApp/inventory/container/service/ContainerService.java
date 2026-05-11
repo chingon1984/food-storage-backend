@@ -1,6 +1,12 @@
-package com.chingon.FoodStorageApp.inventory.container;
+package com.chingon.FoodStorageApp.inventory.container.service;
 
-import com.chingon.FoodStorageApp.inventory.storage.*;
+import com.chingon.FoodStorageApp.inventory.container.dto.ContainerResponse;
+import com.chingon.FoodStorageApp.inventory.container.repository.IContainerRepository;
+import com.chingon.FoodStorageApp.inventory.container.entity.Container;
+import com.chingon.FoodStorageApp.inventory.container.mapper.ContainerMapper;
+import com.chingon.FoodStorageApp.inventory.storage.entity.Storage;
+import com.chingon.FoodStorageApp.inventory.storage.repository.IStorageRepository;
+import com.chingon.FoodStorageApp.inventory.storage.service.IStorageService;
 import com.chingon.FoodStorageApp.shared.exception.RessourceNotFoundException;
 import com.chingon.FoodStorageApp.user.User;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ContainerService implements IContainerService{
+public class ContainerService implements IContainerService {
     private final IContainerRepository containerRepository;
     private final IStorageRepository storageRepository;
     private final IStorageService storageService;

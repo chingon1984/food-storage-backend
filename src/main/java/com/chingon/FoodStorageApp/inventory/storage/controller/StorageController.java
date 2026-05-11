@@ -1,12 +1,14 @@
-package com.chingon.FoodStorageApp.inventory.storage;
+package com.chingon.FoodStorageApp.inventory.storage.controller;
 
+import com.chingon.FoodStorageApp.inventory.storage.service.IStorageService;
+import com.chingon.FoodStorageApp.inventory.storage.dto.StorageRequest;
+import com.chingon.FoodStorageApp.inventory.storage.dto.StorageResponse;
 import com.chingon.FoodStorageApp.shared.annotation.ContainerRequestBody;
 import com.chingon.FoodStorageApp.shared.annotation.StorageIdParameter;
 import com.chingon.FoodStorageApp.shared.api.ErrorResponseDto;
 import com.chingon.FoodStorageApp.shared.api.ResponseDto;
 import com.chingon.FoodStorageApp.shared.constants.Routes;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,7 +31,7 @@ import java.util.List;
 )
 @RestController
 @Validated
-@RequestMapping(path = Routes.API + Routes.Storage.BASE, produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = Routes.API , produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class StorageController {
 
@@ -63,7 +65,7 @@ public class StorageController {
             )
     }
     )
-    @GetMapping()
+    @GetMapping(Routes.Storage.BASE)
     public ResponseEntity<List<StorageResponse>> getAllStorages() {
         List<StorageResponse> storageResponses = storageService.getAllStoragesForUser(1L);
 
@@ -132,7 +134,7 @@ public class StorageController {
             )
     }
     )
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(name = Routes.Storage.BY_ID, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<StorageResponse> createStorage(
             @RequestBody
             @ContainerRequestBody

@@ -1,5 +1,7 @@
-package com.chingon.FoodStorageApp.inventory.container;
+package com.chingon.FoodStorageApp.inventory.container.mapper;
 
+import com.chingon.FoodStorageApp.inventory.container.dto.ContainerResponse;
+import com.chingon.FoodStorageApp.inventory.container.entity.Container;
 import org.springframework.stereotype.Component;
 
 @Component

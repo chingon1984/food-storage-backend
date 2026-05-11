@@ -1,4 +1,4 @@
-package com.chingon.FoodStorageApp.inventory.container;
+package com.chingon.FoodStorageApp.inventory.container.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

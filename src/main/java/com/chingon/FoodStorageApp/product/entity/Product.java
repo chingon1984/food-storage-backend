@@ -1,4 +1,4 @@
-package com.chingon.FoodStorageApp.product;
+package com.chingon.FoodStorageApp.product.entity;
 
 import com.chingon.FoodStorageApp.shared.audit.BaseEntity;
 import jakarta.persistence.*;

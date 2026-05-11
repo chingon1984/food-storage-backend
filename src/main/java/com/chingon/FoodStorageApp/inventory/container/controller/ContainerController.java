@@ -1,5 +1,8 @@
-package com.chingon.FoodStorageApp.inventory.container;
+package com.chingon.FoodStorageApp.inventory.container.controller;
 
+import com.chingon.FoodStorageApp.inventory.container.dto.ContainerRequest;
+import com.chingon.FoodStorageApp.inventory.container.dto.ContainerResponse;
+import com.chingon.FoodStorageApp.inventory.container.service.IContainerService;
 import com.chingon.FoodStorageApp.shared.annotation.ContainerIdParameter;
 import com.chingon.FoodStorageApp.shared.annotation.ContainerRequestBody;
 import com.chingon.FoodStorageApp.shared.annotation.StorageIdParameter;

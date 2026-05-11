@@ -1,5 +1,6 @@
-package com.chingon.FoodStorageApp.inventory.container;
+package com.chingon.FoodStorageApp.inventory.container.repository;
 
+import com.chingon.FoodStorageApp.inventory.container.entity.Container;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

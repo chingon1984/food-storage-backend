@@ -1,4 +1,4 @@
-package com.chingon.FoodStorageApp.inventory.storage;
+package com.chingon.FoodStorageApp.inventory.storage.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

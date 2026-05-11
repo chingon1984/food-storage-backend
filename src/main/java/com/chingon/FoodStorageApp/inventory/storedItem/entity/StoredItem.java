@@ -1,8 +1,8 @@
-package com.chingon.FoodStorageApp.inventory.storedItem;
+package com.chingon.FoodStorageApp.inventory.storedItem.entity;
 
 import com.chingon.FoodStorageApp.shared.audit.BaseEntity;
-import com.chingon.FoodStorageApp.inventory.container.Container;
-import com.chingon.FoodStorageApp.product.Product;
+import com.chingon.FoodStorageApp.inventory.container.entity.Container;
+import com.chingon.FoodStorageApp.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.*;
 

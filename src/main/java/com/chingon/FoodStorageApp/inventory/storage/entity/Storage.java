@@ -1,4 +1,4 @@
-package com.chingon.FoodStorageApp.inventory.storage;
+package com.chingon.FoodStorageApp.inventory.storage.entity;
 
 import com.chingon.FoodStorageApp.shared.audit.BaseEntity;
 import com.chingon.FoodStorageApp.user.User;

@@ -1,4 +1,7 @@
-package com.chingon.FoodStorageApp.inventory.storage;
+package com.chingon.FoodStorageApp.inventory.storage.service;
+
+import com.chingon.FoodStorageApp.inventory.storage.entity.Storage;
+import com.chingon.FoodStorageApp.inventory.storage.dto.StorageResponse;
 
 import java.util.List;
 
