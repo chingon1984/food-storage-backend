@@ -3,7 +3,8 @@ package com.chingon.FoodStorageApp.inventory.storage.service;
 import com.chingon.FoodStorageApp.inventory.storage.entity.Storage;
 import com.chingon.FoodStorageApp.inventory.storage.mapper.StorageMapper;
 import com.chingon.FoodStorageApp.inventory.storage.dto.StorageResponse;
-import com.chingon.FoodStorageApp.inventory.storage.repository.IStorageRepository;
+import com.chingon.FoodStorageApp.inventory.storage.repository.StorageRepository;
+import com.chingon.FoodStorageApp.user.CurrentUserService;
 import com.chingon.FoodStorageApp.user.User;
 import com.chingon.FoodStorageApp.shared.exception.RessourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StorageService implements IStorageService {
 
-    private final IStorageRepository storageRepository;
+    private final StorageRepository storageRepository;
+    private final CurrentUserService currentUserService;
 
     @Override
-    public List<StorageResponse> getAllStoragesForUser(Long userId) {
+    public List<StorageResponse> getAllStoragesForUser() {
+        Long userId = getCurrentUserId();
         return storageRepository.findByUserIdAndArchivedFalse(userId)
                 .stream()
                 .map(StorageMapper::toResponse)
@@ -28,21 +31,24 @@ public class StorageService implements IStorageService {
     }
 
     @Override
-    public StorageResponse getStorageResponseById(Long storageId, Long userId) {
+    public StorageResponse getStorageResponseById(Long storageId) {
+        Long userId = getCurrentUserId();
         Storage storage = storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
                 .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
         return StorageMapper.toResponse(storage);
     }
 
     @Override
-    public Storage getStorageById(Long storageId, Long userId) {
+    public Storage getStorageById(Long storageId) {
+        Long userId = getCurrentUserId();
         return storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
                 .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
     }
 
     @Override
     @Transactional
-    public StorageResponse createStorage(Long userId, String name, String description) {
+    public StorageResponse createStorage(String name, String description) {
+        Long userId = getCurrentUserId();
         User user = new User();
         user.setId(userId);
 
@@ -58,7 +64,8 @@ public class StorageService implements IStorageService {
 
     @Override
     @Transactional
-    public StorageResponse updateStorage(Long storageId, Long userId, String name, String description) {
+    public StorageResponse updateStorage(Long storageId, String name, String description) {
+        Long userId = getCurrentUserId();
         Storage storage = storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
                 .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
 
@@ -70,10 +77,15 @@ public class StorageService implements IStorageService {
 
     @Override
     @Transactional
-    public void deleteStorage(Long storageId, Long userId) {
+    public void deleteStorage(Long storageId) {
+        Long userId = getCurrentUserId();
         Storage storage = storageRepository.findByIdAndUserIdAndArchivedFalse(storageId, userId)
                 .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
 
         storage.setArchived(true);
+    }
+
+    private Long getCurrentUserId() {
+        return currentUserService.getCurrentUser().getId();
     }
 }

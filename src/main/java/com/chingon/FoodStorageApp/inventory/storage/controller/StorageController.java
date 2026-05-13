@@ -67,7 +67,7 @@ public class StorageController {
     )
     @GetMapping(Routes.Storage.BASE)
     public ResponseEntity<List<StorageResponse>> getAllStorages() {
-        List<StorageResponse> storageResponses = storageService.getAllStoragesForUser(1L);
+        List<StorageResponse> storageResponses = storageService.getAllStoragesForUser();
 
         return ResponseEntity.ok(storageResponses);
     }
@@ -104,7 +104,7 @@ public class StorageController {
     @GetMapping(Routes.Storage.BY_ID)
     public ResponseEntity<StorageResponse> getStorageWithId(
             @PathVariable @Positive @StorageIdParameter Long storageId) {
-        StorageResponse storageResponse = storageService.getStorageResponseById(storageId, 1L);
+        StorageResponse storageResponse = storageService.getStorageResponseById(storageId);
 
         return ResponseEntity.ok(storageResponse);
     }
@@ -134,12 +134,12 @@ public class StorageController {
             )
     }
     )
-    @PostMapping(name = Routes.Storage.BY_ID, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(path = Routes.Storage.BASE, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<StorageResponse> createStorage(
             @RequestBody
             @ContainerRequestBody
             @Valid StorageRequest request) {
-        StorageResponse storageResponse = storageService.createStorage(1L, request.name(), request.description());
+        StorageResponse storageResponse = storageService.createStorage(request.name(), request.description());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -178,7 +178,7 @@ public class StorageController {
     )
     @PutMapping(Routes.Storage.BY_ID)
     public ResponseEntity<StorageResponse> updateStorage( @PathVariable @Positive  @StorageIdParameter Long storageId, @Valid @RequestBody StorageRequest storageRequest) {
-        StorageResponse updatedStorageResponse = storageService.updateStorage(storageId, 1L, storageRequest.name(), storageRequest.description());
+        StorageResponse updatedStorageResponse = storageService.updateStorage(storageId,  storageRequest.name(), storageRequest.description());
 
         return ResponseEntity.ok(updatedStorageResponse);
     }
@@ -214,7 +214,7 @@ public class StorageController {
     )
     @DeleteMapping(Routes.Storage.BY_ID)
     public ResponseEntity<ResponseDto> deleteStorage(@Valid @Positive @StorageIdParameter Long storageId) {
-        storageService.deleteStorage(storageId, 1L);
+        storageService.deleteStorage(storageId);
 
         return ResponseEntity.ok(new ResponseDto("Storage with ID: " + storageId + " was deleted!"));
     }

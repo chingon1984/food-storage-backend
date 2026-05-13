@@ -1,7 +1,8 @@
 spring:
-  security:
-    user:
-      name: admin
-      password: pw
+  jpa:
+    show-sql: true
   flyway:
     locations: classpath:db/migration,classpath:db/dev
+logging:
+  level:
+    org.springframework.security: DEBUG
