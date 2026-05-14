@@ -1,6 +1,4 @@
-package com.chingon.FoodStorageApp.user;
-
-import java.util.Optional;
+package com.chingon.FoodStorageApp.identity.user;
 
 public interface ICurrentUserService {
     User getCurrentUser();

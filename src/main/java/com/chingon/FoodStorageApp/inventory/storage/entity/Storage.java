@@ -1,7 +1,8 @@
 package com.chingon.FoodStorageApp.inventory.storage.entity;
 
+import com.chingon.FoodStorageApp.identity.household.Household;
 import com.chingon.FoodStorageApp.shared.audit.BaseEntity;
-import com.chingon.FoodStorageApp.user.User;
+import com.chingon.FoodStorageApp.identity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,8 +21,8 @@ public class Storage extends BaseEntity {
     @Column(nullable = false)
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+    @JoinColumn(name = "HOUSEHOLD_ID", nullable = false)
+    private Household household;
     private String description;
     @Column(nullable = false)
     private Boolean archived = false;

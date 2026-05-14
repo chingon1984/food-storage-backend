@@ -8,10 +8,8 @@ import com.chingon.FoodStorageApp.inventory.storage.entity.Storage;
 import com.chingon.FoodStorageApp.inventory.storage.repository.StorageRepository;
 import com.chingon.FoodStorageApp.inventory.storage.service.IStorageService;
 import com.chingon.FoodStorageApp.shared.exception.RessourceNotFoundException;
-import com.chingon.FoodStorageApp.user.CurrentUserService;
-import com.chingon.FoodStorageApp.user.User;
+import com.chingon.FoodStorageApp.identity.user.CurrentUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

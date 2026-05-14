@@ -1,8 +1,6 @@
-package com.chingon.FoodStorageApp.user;
+package com.chingon.FoodStorageApp.identity.user;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

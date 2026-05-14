@@ -1,7 +1,5 @@
 package com.chingon.FoodStorageApp.shared.audit;
 
-import com.chingon.FoodStorageApp.user.CurrentUserService;
-import com.chingon.FoodStorageApp.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;

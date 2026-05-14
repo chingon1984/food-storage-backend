@@ -1,4 +1,4 @@
-package com.chingon.FoodStorageApp.user;
+package com.chingon.FoodStorageApp.identity.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

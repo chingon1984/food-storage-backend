@@ -1,4 +1,4 @@
-INSERT INTO T_STORAGE(name, user_id, description, archived)
+INSERT INTO T_STORAGE(name, household_id, description, archived)
 VALUES
     ('Storage_living-room', 1, 'Storage at the living room', false),
     ('Storage_garage', 1, 'Storage at the garage', false),

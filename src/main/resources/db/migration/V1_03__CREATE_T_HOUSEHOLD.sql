@@ -1,0 +1,21 @@
+CREATE SEQUENCE T_HOUSEHOLD_SEQ increment by 1 start with 1;
+
+CREATE TABLE T_HOUSEHOLD (
+    ID BIGINT not null default nextval('T_HOUSEHOLD_SEQ'),
+    PUBLIC_ID uuid not null,
+    NAME varchar(100) not null,
+    DESCRIPTION TEXT,
+    ARCHIVED boolean not null default false,
+
+    CREATED_AT timestamp not null DEFAULT CURRENT_TIMESTAMP,
+    UPDATED_AT timestamp not null DEFAULT CURRENT_TIMESTAMP,
+    CREATED_BY varchar(100),
+    UPDATED_BY varchar(100),
+
+    CONSTRAINT T_HOUSEHOLD_PK PRIMARY KEY (ID),
+    CONSTRAINT T_HOUSEHOLD_PUBLIC_ID_UK UNIQUE (PUBLIC_ID)
+);
+
+CREATE INDEX IDX_HOUSEHOLD_PUBLIC_ID
+    ON T_HOUSEHOLD(PUBLIC_ID)
+    WHERE ARCHIVED = false;

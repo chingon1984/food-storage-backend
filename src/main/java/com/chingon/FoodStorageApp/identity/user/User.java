@@ -1,4 +1,4 @@
-package com.chingon.FoodStorageApp.user;
+package com.chingon.FoodStorageApp.identity.user;
 
 import com.chingon.FoodStorageApp.shared.audit.BaseEntity;
 import jakarta.persistence.*;
@@ -25,7 +25,7 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     private Long id;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
     @Column(nullable = false, unique = true)
     private String email;
