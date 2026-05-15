@@ -9,7 +9,9 @@ import com.chingon.FoodStorageApp.identity.entity.User;
 import com.chingon.FoodStorageApp.identity.mapper.HouseholdMapper;
 import com.chingon.FoodStorageApp.identity.repository.HouseholdMemberRepository;
 import com.chingon.FoodStorageApp.identity.repository.HouseholdRepository;
+import com.chingon.FoodStorageApp.shared.exception.RessourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,10 @@ public class HouseholdService implements IHouseholdService {
         return null;
     }
 
+    /**
+     * @param householdRequest
+     * @return
+     */
     @Transactional
     @Override
     public HouseholdResponse createHousehold(HouseholdRequest householdRequest) {
@@ -49,6 +55,9 @@ public class HouseholdService implements IHouseholdService {
         return HouseholdMapper.toResponse(savedHousehold, savedHouseholdMember.getRole());
     }
 
+    /**
+     * @return
+     */
     @Override
     public List<HouseholdResponse> getCurrentUsersHouseholds() {
         User currentUser = currentUserService.getCurrentUser();
@@ -61,9 +70,29 @@ public class HouseholdService implements IHouseholdService {
                 .toList();
     }
 
+    /**
+     * @param publicId
+     * @param householdRequest
+     * @return
+     */
+    @Transactional
     @Override
     public HouseholdResponse updateHousehold(UUID publicId, HouseholdRequest householdRequest) {
-        return null;
+        User currentUser = currentUserService.getCurrentUser();
+
+        Household updatableHousehold = householdRepository.findByPublicIdAndArchivedFalse(publicId)
+                .orElseThrow(() -> new RessourceNotFoundException("Household", "publicId", publicId.toString()));
+
+        HouseholdMember householdMember = householdMemberRepository.findByUser_IdAndHousehold_IdAndArchivedFalse(currentUser.getId(), updatableHousehold.getId())
+                .orElseThrow(() -> new RessourceNotFoundException("Household", "publicId", publicId.toString()));
+
+        if (householdMember.getRole() != Household_Role.OWNER) {
+            throw new AccessDeniedException("Only owners can update households!");
+        }
+        updatableHousehold.setName(householdRequest.name());
+        updatableHousehold.setDescription(householdRequest.description());
+
+        return HouseholdMapper.toResponse(updatableHousehold, householdMember.getRole());
     }
 
     @Override

@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(
         name = "CRUD REST APIs for Household handling in the FoodStorage Application",
@@ -29,7 +30,7 @@ import java.util.List;
 )
 @RestController
 @Validated
-@RequestMapping(path = Routes.API + Routes.Household.BASE, consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = Routes.API + Routes.Household.BASE, produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class HouseholdController {
 
@@ -89,13 +90,20 @@ public class HouseholdController {
             )
     }
     )
-    @PostMapping()
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<HouseholdResponse> createHousehold(@Valid @RequestBody @HouseholdRequestBody HouseholdRequest householdRequest) {
         HouseholdResponse householdResponse = householdService.createHousehold(householdRequest);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(householdResponse);
+    }
+
+    @PutMapping(path = Routes.Household.BY_ID, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<HouseholdResponse> updateHouseholdDetails(@PathVariable UUID publicId, @RequestBody @Valid @HouseholdRequestBody HouseholdRequest householdRequest) {
+        HouseholdResponse updatedHouseholdResponse = householdService.updateHousehold(publicId, householdRequest);
+
+        return ResponseEntity.ok(updatedHouseholdResponse);
     }
 
 
