@@ -5,7 +5,7 @@ import com.chingon.FoodStorageApp.identity.dto.HouseholdResponse;
 import com.chingon.FoodStorageApp.identity.service.IHouseholdService;
 import com.chingon.FoodStorageApp.shared.annotation.HouseholdRequestBody;
 import com.chingon.FoodStorageApp.shared.constants.Routes;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,8 +34,7 @@ public class HouseholdController {
 
     @PostMapping()
     public ResponseEntity<HouseholdResponse> createHousehold(
-            @RequestBody
-            HouseholdRequest householdRequest) {
+            @Valid @RequestBody HouseholdRequest householdRequest) {
         System.out.println(householdRequest.name());
         HouseholdResponse householdResponse = householdService.createHousehold(householdRequest);
 
