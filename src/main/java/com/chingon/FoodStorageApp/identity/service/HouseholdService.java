@@ -26,9 +26,21 @@ public class HouseholdService implements IHouseholdService {
     private final HouseholdMemberRepository householdMemberRepository;
     private final CurrentUserService currentUserService;
 
+    /**
+     * @param publicId
+     * @return
+     */
     @Override
     public HouseholdResponse getHousehold(UUID publicId) {
-        return null;
+        User currentUser = currentUserService.getCurrentUser();
+
+        Household household = householdRepository.findByPublicIdAndArchivedFalse(publicId)
+                .orElseThrow(() -> new RessourceNotFoundException("Household", "publicId", publicId.toString()));
+
+        HouseholdMember householdMember = householdMemberRepository.findByUserIdAndHouseholdIdAndArchivedFalse(currentUser.getId(), household.getId())
+                .orElseThrow(() -> new RessourceNotFoundException("Household", "publicId", publicId.toString()));
+
+        return HouseholdMapper.toResponse(household, householdMember.getRole());
     }
 
     /**
@@ -62,7 +74,7 @@ public class HouseholdService implements IHouseholdService {
     public List<HouseholdResponse> getCurrentUsersHouseholds() {
         User currentUser = currentUserService.getCurrentUser();
 
-        List<HouseholdMember> householdMembers = householdMemberRepository.findByUser_IdAndArchivedFalse(currentUser.getId());
+        List<HouseholdMember> householdMembers = householdMemberRepository.findByUserIdAndArchivedFalse(currentUser.getId());
 
         return householdMembers
                 .stream()
@@ -83,7 +95,7 @@ public class HouseholdService implements IHouseholdService {
         Household updatableHousehold = householdRepository.findByPublicIdAndArchivedFalse(publicId)
                 .orElseThrow(() -> new RessourceNotFoundException("Household", "publicId", publicId.toString()));
 
-        HouseholdMember householdMember = householdMemberRepository.findByUser_IdAndHousehold_IdAndArchivedFalse(currentUser.getId(), updatableHousehold.getId())
+        HouseholdMember householdMember = householdMemberRepository.findByUserIdAndHouseholdIdAndArchivedFalse(currentUser.getId(), updatableHousehold.getId())
                 .orElseThrow(() -> new RessourceNotFoundException("Household", "publicId", publicId.toString()));
 
         if (householdMember.getRole() != Household_Role.OWNER) {
@@ -95,8 +107,28 @@ public class HouseholdService implements IHouseholdService {
         return HouseholdMapper.toResponse(updatableHousehold, householdMember.getRole());
     }
 
+    /**
+     * @param publicId
+     */
+    @Transactional
     @Override
     public void deleteHousehold(UUID publicId) {
+        User currentUser = currentUserService.getCurrentUser();
 
+
+        Household deletableHousehold = householdRepository.findByPublicIdAndArchivedFalse(publicId)
+                .orElseThrow(() -> new RessourceNotFoundException("Household", "publicId", publicId.toString()));
+
+        HouseholdMember householdMember = householdMemberRepository.findByUserIdAndHouseholdIdAndArchivedFalse(currentUser.getId(), deletableHousehold.getId())
+                .orElseThrow(() -> new RessourceNotFoundException("Household", "publicId", publicId.toString()));
+
+        if (householdMember.getRole() != Household_Role.OWNER) {
+            throw new AccessDeniedException("Only owners can delete households!");
+        }
+
+        deletableHousehold.setArchived(true);
+
+        List<HouseholdMember> deletableHouseholdMembers = householdMemberRepository.findByHouseholdId(deletableHousehold.getId());
+        deletableHouseholdMembers.forEach(member -> member.setArchived(true));
     }
 }

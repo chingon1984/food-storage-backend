@@ -6,6 +6,7 @@ import com.chingon.FoodStorageApp.identity.service.IHouseholdService;
 import com.chingon.FoodStorageApp.inventory.dto.StorageResponse;
 import com.chingon.FoodStorageApp.shared.annotation.HouseholdRequestBody;
 import com.chingon.FoodStorageApp.shared.api.ErrorResponseDto;
+import com.chingon.FoodStorageApp.shared.api.ResponseDto;
 import com.chingon.FoodStorageApp.shared.constants.Routes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,7 +39,7 @@ public class HouseholdController {
 
     @Operation(
             summary = "Fetch all Household REST API",
-            description = "REST API to fetch all given storages"
+            description = "REST API to fetch all given Households"
     )
     @ApiResponses({
             @ApiResponse(
@@ -66,8 +67,43 @@ public class HouseholdController {
     }
 
     @Operation(
+            summary = "Fetch {Public_ID} Household REST API",
+            description = "REST API to fetch Household with given Public ID"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Household Found",
+                    content = @Content(schema = @Schema(implementation = StorageResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Household not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            )
+    }
+    )
+    @GetMapping(Routes.Household.BY_ID)
+    public ResponseEntity<HouseholdResponse> fetchHousehold(@PathVariable UUID publicId) {
+        HouseholdResponse householdResponse = householdService.getHousehold(publicId);
+
+        return ResponseEntity.ok(householdResponse);
+    }
+
+    @Operation(
             summary = "Create Household REST API",
-            description = "REST API to create a new storage"
+            description = "REST API to create a new Household"
 
     )
     @ApiResponses({
@@ -99,6 +135,36 @@ public class HouseholdController {
                 .body(householdResponse);
     }
 
+    @Operation(
+            summary = "Update Household REST API",
+            description = "REST API to update a Household with given ID"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Household updated",
+                    content = @Content(schema = @Schema(implementation = StorageResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Household not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
     @PutMapping(path = Routes.Household.BY_ID, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<HouseholdResponse> updateHouseholdDetails(@PathVariable UUID publicId, @RequestBody @Valid @HouseholdRequestBody HouseholdRequest householdRequest) {
         HouseholdResponse updatedHouseholdResponse = householdService.updateHousehold(publicId, householdRequest);
@@ -106,5 +172,40 @@ public class HouseholdController {
         return ResponseEntity.ok(updatedHouseholdResponse);
     }
 
+    @Operation(
+            summary = "Delete Household REST API",
+            description = "REST API to delete a Household"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Household deleted",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Household not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @DeleteMapping(path = Routes.Household.BY_ID)
+    public ResponseEntity<ResponseDto> deleteHousehold(@PathVariable UUID publicId) {
+        householdService.deleteHousehold(publicId);
+
+        return ResponseEntity.ok(new ResponseDto("Household with public ID: " + publicId.toString() + " was deleted!"));
+    }
 
 }
