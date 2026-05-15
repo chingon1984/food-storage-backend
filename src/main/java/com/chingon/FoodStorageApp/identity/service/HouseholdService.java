@@ -9,7 +9,6 @@ import com.chingon.FoodStorageApp.identity.entity.User;
 import com.chingon.FoodStorageApp.identity.mapper.HouseholdMapper;
 import com.chingon.FoodStorageApp.identity.repository.HouseholdMemberRepository;
 import com.chingon.FoodStorageApp.identity.repository.HouseholdRepository;
-import com.chingon.FoodStorageApp.shared.exception.RessourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class HouseholdService implements IHouseholdService{
+public class HouseholdService implements IHouseholdService {
 
     private final HouseholdRepository householdRepository;
     private final HouseholdMemberRepository householdMemberRepository;
@@ -52,7 +51,14 @@ public class HouseholdService implements IHouseholdService{
 
     @Override
     public List<HouseholdResponse> getCurrentUsersHouseholds() {
-        return List.of();
+        User currentUser = currentUserService.getCurrentUser();
+
+        List<HouseholdMember> householdMembers = householdMemberRepository.findByUser_IdAndArchivedFalse(currentUser.getId());
+
+        return householdMembers
+                .stream()
+                .map(member -> HouseholdMapper.toResponse(member.getHousehold(), member.getRole()))
+                .toList();
     }
 
     @Override
