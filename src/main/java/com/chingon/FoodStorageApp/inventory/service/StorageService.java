@@ -1,9 +1,7 @@
 package com.chingon.FoodStorageApp.inventory.service;
 
 import com.chingon.FoodStorageApp.identity.entity.Household;
-import com.chingon.FoodStorageApp.identity.repository.HouseholdRepository;
 import com.chingon.FoodStorageApp.identity.service.HouseholdAccessService;
-import com.chingon.FoodStorageApp.identity.service.ICurrentUserService;
 import com.chingon.FoodStorageApp.inventory.dto.StorageRequest;
 import com.chingon.FoodStorageApp.inventory.dto.StorageResponse;
 import com.chingon.FoodStorageApp.inventory.entity.Storage;
@@ -22,22 +20,14 @@ import java.util.UUID;
 public class StorageService implements IStorageService {
 
     private final StorageRepository storageRepository;
-    private final ICurrentUserService currentUserService;
-    private final HouseholdRepository householdRepository;
     private final HouseholdAccessService accessService;
 
     @Override
     public List<StorageResponse> getAllStorages(UUID publicId) {
-        Household requestedHousehold = getHouseholdByPublicIdAccessibleForCurrentUser(publicId);
+        Household requestedHousehold = accessService.getHouseholdByPublicId(publicId);
         return getStoragesByHouseholdId(requestedHousehold.getId());
     }
 
-    private Household getHouseholdByPublicIdAccessibleForCurrentUser(UUID publicId) {
-        Household requestedHousehold = getHouseholdByPublicId(publicId);
-        checkHouseholdPermissions(requestedHousehold);
-
-        return requestedHousehold;
-    }
 
     private List<StorageResponse> getStoragesByHouseholdId(Long householdId) {
         return storageRepository.findByHouseholdIdAndArchivedFalse(householdId)
@@ -46,19 +36,6 @@ public class StorageService implements IStorageService {
                 .toList();
     }
 
-    private Household getHouseholdByPublicId(UUID publicId) {
-        return householdRepository.findByPublicIdAndArchivedFalse(publicId)
-                .orElseThrow(() -> new RessourceNotFoundException("Household", "PublicId", publicId.toString()));
-    }
-
-    private void checkHouseholdPermissions(Household household) {
-        boolean isMember = accessService.isCurrentUserMemberOfHousehold(household.getId());
-
-        if (!isMember) {
-            throw new RessourceNotFoundException("Household", "PublicId", household.getPublicId().toString());
-        }
-
-    }
 
     @Override
     public StorageResponse getStorage(Long storageId) {
@@ -71,14 +48,14 @@ public class StorageService implements IStorageService {
         Storage storage = storageRepository.findByIdAndArchivedFalse(storageId)
                 .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
 
-        checkHouseholdPermissions(storage.getHousehold());
+        accessService.checkHouseholdPermissions(storage.getHousehold());
 
         return storage;
     }
 
     @Override
     public StorageResponse createStorage(UUID publicId, StorageRequest newStorage) {
-        Household household = getHouseholdByPublicIdAccessibleForCurrentUser(publicId);
+        Household household = accessService.getHouseholdByPublicId(publicId);
 
         return createStorageInHousehold(household, newStorage);
     }

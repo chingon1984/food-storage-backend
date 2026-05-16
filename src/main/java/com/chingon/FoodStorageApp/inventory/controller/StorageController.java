@@ -112,7 +112,7 @@ public class StorageController {
 
     @Operation(
             summary = "Create Storage REST API",
-            description = "REST API to create a new storage"
+            description = "REST API to create a new storage in household"
 
     )
     @ApiResponses({

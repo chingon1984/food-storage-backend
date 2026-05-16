@@ -43,6 +43,7 @@ public class HouseholdService implements IHouseholdService {
         return HouseholdMapper.toResponse(household, householdMember.getRole());
     }
 
+
     /**
      * @param householdRequest
      * @return
