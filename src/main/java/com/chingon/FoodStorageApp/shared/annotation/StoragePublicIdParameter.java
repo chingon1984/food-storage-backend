@@ -11,8 +11,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Parameter(
-        description = "ID of the storage",
-        example = "1",
+        description = "Public ID of the storage",
+        example = "355480ae-7c36-4c42-a51f-5172abefe013",
         required = true
 )
-public @interface StorageIdParameter {}
+public @interface StoragePublicIdParameter {
+}

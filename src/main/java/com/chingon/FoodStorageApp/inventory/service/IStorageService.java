@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IStorageService {
-    List<StorageResponse> getAllStorages(UUID publicId);
+    List<StorageResponse> getAllStoragesByHousehold(UUID publicId);
 
-    StorageResponse getStorage(Long storageId);
+    StorageResponse getStorage(UUID publicId);
 
-    StorageResponse createStorage(UUID publicId, StorageRequest newStorage);
+    StorageResponse createStorageAtHousehold(UUID publicId, StorageRequest newStorage);
 
-    StorageResponse updateStorage(Long storageId, StorageRequest newStorage);
+    StorageResponse updateStorage(UUID publicId, StorageRequest newStorage);
 
-    void deleteStorage(Long storageId);
+    void deleteStorage(UUID publicId);
 }

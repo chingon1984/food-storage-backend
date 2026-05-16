@@ -24,8 +24,11 @@ class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) {
         return http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers(
+                                "/actuator/health",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**")
+                        .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -37,7 +40,7 @@ class SecurityConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
+        //        return new BCryptPasswordEncoder();
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

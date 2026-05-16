@@ -2,12 +2,14 @@ package com.chingon.FoodStorageApp.inventory.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.UUID;
+
 @Schema(name = "StorageResponse", description = "Schema to hold Storage Response Information")
 public record StorageResponse(
         @Schema(
-                description = "ID of storage", example = "1"
+                description = "PUBLIC ID of storage", example = "355480ae-7c36-4c42-a51f-5172abefe013"
         )
-        Long id,
+        UUID publicId,
         @Schema(
                 description = "name of the storage", example = "storage House"
         )

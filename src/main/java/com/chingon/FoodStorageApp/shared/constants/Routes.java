@@ -13,7 +13,7 @@ public final class Routes {
 
     public static final class Storage {
         public static final String BASE = "/storages";
-        public static final String BY_ID = "/{storageId}";
+        public static final String BY_ID = "/{publicId}";
     }
 
     public static final class Container {

@@ -23,7 +23,7 @@ public class StorageService implements IStorageService {
     private final HouseholdAccessService accessService;
 
     @Override
-    public List<StorageResponse> getAllStorages(UUID publicId) {
+    public List<StorageResponse> getAllStoragesByHousehold(UUID publicId) {
         Household requestedHousehold = accessService.getHouseholdByPublicId(publicId);
         return getStoragesByHouseholdId(requestedHousehold.getId());
     }
@@ -38,15 +38,15 @@ public class StorageService implements IStorageService {
 
 
     @Override
-    public StorageResponse getStorage(Long storageId) {
-        Storage requestedStorage = getStorageByIdAccessibleForCurrentUser(storageId);
+    public StorageResponse getStorage(UUID publicId) {
+        Storage requestedStorage = getStorageByIdAccessibleForCurrentUser(publicId);
 
         return StorageMapper.toResponse(requestedStorage);
     }
 
-    private Storage getStorageByIdAccessibleForCurrentUser(Long storageId) {
-        Storage storage = storageRepository.findByIdAndArchivedFalse(storageId)
-                .orElseThrow(() -> new RessourceNotFoundException("Storage", "ID", storageId.toString()));
+    private Storage getStorageByIdAccessibleForCurrentUser(UUID publicId) {
+        Storage storage = storageRepository.findByPublicIdAndArchivedFalse(publicId)
+                .orElseThrow(() -> new RessourceNotFoundException("Storage", "Public ID", publicId.toString()));
 
         accessService.checkHouseholdPermissions(storage.getHousehold());
 
@@ -54,7 +54,7 @@ public class StorageService implements IStorageService {
     }
 
     @Override
-    public StorageResponse createStorage(UUID publicId, StorageRequest newStorage) {
+    public StorageResponse createStorageAtHousehold(UUID publicId, StorageRequest newStorage) {
         Household household = accessService.getHouseholdByPublicId(publicId);
 
         return createStorageInHousehold(household, newStorage);
@@ -73,8 +73,8 @@ public class StorageService implements IStorageService {
 
     @Transactional
     @Override
-    public StorageResponse updateStorage(Long storageId, StorageRequest newStorage) {
-        Storage updateableStorage = getStorageByIdAccessibleForCurrentUser(storageId);
+    public StorageResponse updateStorage(UUID publicId, StorageRequest newStorage) {
+        Storage updateableStorage = getStorageByIdAccessibleForCurrentUser(publicId);
 
         updateableStorage.setName(newStorage.name());
         updateableStorage.setDescription(newStorage.description());
@@ -85,8 +85,8 @@ public class StorageService implements IStorageService {
 
     @Override
     @Transactional
-    public void deleteStorage(Long storageId) {
-        Storage deletableStorage = getStorageByIdAccessibleForCurrentUser(storageId);
+    public void deleteStorage(UUID publicId) {
+        Storage deletableStorage = getStorageByIdAccessibleForCurrentUser(publicId);
         deletableStorage.setArchived(true);
     }
 }

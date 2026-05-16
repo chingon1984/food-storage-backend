@@ -5,9 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface StorageRepository extends JpaRepository<Storage, Long> {
-    Optional<Storage> findByIdAndArchivedFalse(Long id);
+    Optional<Storage> findByPublicIdAndArchivedFalse(UUID publicId);
 
     List<Storage> findByHouseholdIdAndArchivedFalse(Long householdId);
 
