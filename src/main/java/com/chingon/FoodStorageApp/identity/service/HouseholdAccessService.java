@@ -14,6 +14,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class HouseholdAccessService {
+    //TODO Remove class and use householdservice class's methods for access solely
     private final ICurrentUserService currentUserService;
     private final HouseholdMemberRepository householdMemberRepository;
     private final HouseholdRepository householdRepository;
