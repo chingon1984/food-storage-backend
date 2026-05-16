@@ -7,7 +7,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface HouseholdRepository extends JpaRepository<Household, Long> {
-    Optional<Household> findByIdAndArchivedFalse(Long id);
     Optional<Household> findByPublicIdAndArchivedFalse(UUID publicId);
-    boolean existsByPublicIdAndArchivedFalse(UUID publicId);
 }

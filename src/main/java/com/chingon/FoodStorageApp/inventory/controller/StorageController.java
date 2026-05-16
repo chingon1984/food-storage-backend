@@ -1,8 +1,8 @@
 package com.chingon.FoodStorageApp.inventory.controller;
 
-import com.chingon.FoodStorageApp.inventory.service.IStorageService;
 import com.chingon.FoodStorageApp.inventory.dto.StorageRequest;
 import com.chingon.FoodStorageApp.inventory.dto.StorageResponse;
+import com.chingon.FoodStorageApp.inventory.service.IStorageService;
 import com.chingon.FoodStorageApp.shared.annotation.ContainerRequestBody;
 import com.chingon.FoodStorageApp.shared.annotation.StorageIdParameter;
 import com.chingon.FoodStorageApp.shared.api.ErrorResponseDto;
@@ -24,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(
         name = "CRUD REST APIs for Storage handling in the FoodStorage Application",
@@ -31,15 +32,15 @@ import java.util.List;
 )
 @RestController
 @Validated
-@RequestMapping(path = Routes.API , produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = Routes.API, produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class StorageController {
 
     private final IStorageService storageService;
 
     @Operation(
-            summary = "Fetch all Storage REST API",
-            description = "REST API to fetch all given storages"
+            summary = "Fetch all Storages REST API",
+            description = "REST API to fetch all storages for given household"
     )
     @ApiResponses({
             @ApiResponse(
@@ -65,9 +66,9 @@ public class StorageController {
             )
     }
     )
-    @GetMapping(Routes.Storage.BASE)
-    public ResponseEntity<List<StorageResponse>> getAllStorages() {
-        List<StorageResponse> storageResponses = storageService.getAllStoragesForHousehold();
+    @GetMapping(path = Routes.Household.BASE + Routes.Household.BY_ID + Routes.Storage.BASE)
+    public ResponseEntity<List<StorageResponse>> getAllStoragesForHousehold(@PathVariable UUID publicId) {
+        List<StorageResponse> storageResponses = storageService.getAllStorages(publicId);
 
         return ResponseEntity.ok(storageResponses);
     }
@@ -101,10 +102,10 @@ public class StorageController {
             )
     }
     )
-    @GetMapping(Routes.Storage.BY_ID)
-    public ResponseEntity<StorageResponse> getStorageWithId(
+    @GetMapping(Routes.Storage.BASE + Routes.Storage.BY_ID)
+    public ResponseEntity<StorageResponse> getStorage(
             @PathVariable @Positive @StorageIdParameter Long storageId) {
-        StorageResponse storageResponse = storageService.getStorageResponseById(storageId);
+        StorageResponse storageResponse = storageService.getStorage(storageId);
 
         return ResponseEntity.ok(storageResponse);
     }
@@ -134,12 +135,11 @@ public class StorageController {
             )
     }
     )
-    @PostMapping(path = Routes.Storage.BASE, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(path = Routes.Household.BASE + Routes.Household.BY_ID + Routes.Storage.BASE, consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<StorageResponse> createStorage(
-            @RequestBody
-            @ContainerRequestBody
-            @Valid StorageRequest request) {
-        StorageResponse storageResponse = storageService.createStorage(request.name(), request.description());
+            @PathVariable UUID publicId,
+            @RequestBody @ContainerRequestBody @Valid StorageRequest request) {
+        StorageResponse storageResponse = storageService.createStorage(publicId, request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -160,7 +160,7 @@ public class StorageController {
                     responseCode = "404",
                     description = "Storage not found",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)
-            )
+                    )
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -176,9 +176,11 @@ public class StorageController {
             )
     }
     )
-    @PutMapping(Routes.Storage.BY_ID)
-    public ResponseEntity<StorageResponse> updateStorage( @PathVariable @Positive  @StorageIdParameter Long storageId, @Valid @RequestBody StorageRequest storageRequest) {
-        StorageResponse updatedStorageResponse = storageService.updateStorage(storageId,  storageRequest.name(), storageRequest.description());
+    @PutMapping(Routes.Storage.BASE + Routes.Storage.BY_ID)
+    public ResponseEntity<StorageResponse> updateStorage(
+            @PathVariable @Positive @StorageIdParameter Long storageId,
+            @Valid @RequestBody StorageRequest storageRequest) {
+        StorageResponse updatedStorageResponse = storageService.updateStorage(storageId, storageRequest);
 
         return ResponseEntity.ok(updatedStorageResponse);
     }
@@ -212,10 +214,10 @@ public class StorageController {
             )
     }
     )
-    @DeleteMapping(Routes.Storage.BY_ID)
-    public ResponseEntity<ResponseDto> deleteStorage(@Valid @Positive @StorageIdParameter Long storageId) {
+    @DeleteMapping(Routes.Storage.BASE + Routes.Storage.BY_ID)
+    public ResponseEntity<ResponseDto> deleteStorage(@PathVariable @Positive @StorageIdParameter Long storageId) {
         storageService.deleteStorage(storageId);
 
-        return ResponseEntity.ok(new ResponseDto("Storage with ID: " + storageId + " was deleted!"));
+        return ResponseEntity.ok(new ResponseDto("Storage with ID: " + storageId.toString() + " was deleted!"));
     }
 }

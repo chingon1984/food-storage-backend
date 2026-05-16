@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StorageRepository extends JpaRepository<Storage, Long> {
+    Optional<Storage> findByIdAndArchivedFalse(Long id);
+
     List<Storage> findByHouseholdIdAndArchivedFalse(Long householdId);
+
     Optional<Storage> findByIdAndHouseholdIdAndArchivedFalse(Long id, Long householdId);
 }

@@ -1,15 +1,19 @@
 package com.chingon.FoodStorageApp.inventory.service;
 
-import com.chingon.FoodStorageApp.inventory.entity.Storage;
+import com.chingon.FoodStorageApp.inventory.dto.StorageRequest;
 import com.chingon.FoodStorageApp.inventory.dto.StorageResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface IStorageService {
-    List<StorageResponse> getAllStoragesForHousehold();
-    StorageResponse getStorageResponseById(Long storageId);
-    Storage getStorageById(Long storageId);
-    StorageResponse createStorage(String name, String description);
-    StorageResponse updateStorage(Long storageId, String name, String description);
+    List<StorageResponse> getAllStorages(UUID publicId);
+
+    StorageResponse getStorage(Long storageId);
+
+    StorageResponse createStorage(UUID publicId, StorageRequest newStorage);
+
+    StorageResponse updateStorage(Long storageId, StorageRequest newStorage);
+
     void deleteStorage(Long storageId);
 }

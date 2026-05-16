@@ -7,13 +7,13 @@ public final class Routes {
     }
 
     public static final class Household {
-        public static final String BASE = "/household";
+        public static final String BASE = "/households";
         public static final String BY_ID = "/{publicId}";
     }
 
     public static final class Storage {
         public static final String BASE = "/storages";
-        public static final String BY_ID = BASE + "/{storageId}";
+        public static final String BY_ID = "/{storageId}";
     }
 
     public static final class Container {
